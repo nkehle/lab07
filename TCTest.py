@@ -3,8 +3,8 @@
 # CSC3-349-01 -- Fall 2023
 # Lab 07
 
-import EditDistance
 import sys
+import TestChecker  
 
 '''
     Overview: read the contents of a file and strip whitespace
@@ -13,32 +13,39 @@ import sys
     Return:
         - contents of the file
 '''
-def read_file(filename):
+def read_dictionary_file(test_checker, filename):
     with open(filename, 'r') as file:
-        # read the entire file at once
-        file_content = file.read()
-        # remove the newline chars and whitspace        
-        stripped_content = file_content.strip()
-
-    return stripped_content
+        dictionary_words = []
+        # read one line of the file
+        for line in file:
+            dictionary_words.append(line.strip())
+            
+    test_checker.setDictionary(dictionary_words)
+    return
 
 '''
-    Overview: Driver code for testing the ed with two files
+    Overview: Driver code for testing the TestChecker with two files
+    USAGE : python3 <TCTest.py> <dictionary text file> <strings text file>
 '''
 if __name__ == "__main__":
-    # check the input (shouldn't be wrong with grader)
-    if len(sys.argv) != 3:
-        print("Incorrect file input")
-        sys.exit(1)
+    # make an instance of TestChecker
+    test_checker = TestChecker.TestChecker()
+    strings = []
 
-    # read the contents into vars
-    file1_content = read_file(sys.argv[1])
-    file2_content = read_file(sys.argv[2])
+    # set the dictionary
+    read_dictionary_file(test_checker, sys.argv[1])       # dictionary file
 
-    ed = EditDistance()
-    distance = ed.findEditDistance(file1_content, file2_content)
-
-    print(f"Edit Distance: {distance}")
-    print("Path Chosen:")
-    ed.recoverAlignment(file1_content, file2_content)
-    
+    # go through each of the strings
+    with open(sys.argv[2], 'r') as file:
+        for line in file:
+            strings.append(line.strip())
+        
+    # go through all the strings 
+    for string in strings:
+        test_checker.setString(string)
+        # analyze the string
+        if test_checker.isText():
+            test_checker.split()
+        else:
+            print("String:", test_checker.string, "is not a text")
+        

@@ -73,13 +73,3 @@ class EditDistance:
         path.reverse()
         for move in path:
             print(move)
-
-
-# driver code
-ed = EditDistance()
-s = "me"
-t = "mee"
-distance = ed.findEditDistance(s, t)
-print("Edit Distance:", distance)
-print("Matrix: \n", ed.matrix)
-ed.recoverAlignment(s, t)

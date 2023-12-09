@@ -6,39 +6,36 @@
 import EditDistance
 import sys
 
-'''
-    Overview: read the contents of a file and strip whitespace
-    Parameters:
-        - filename
-    Return:
-        - contents of the file
-'''
-def read_file(filename):
+''' read the two lines individually '''
+def read_single_file(filename):
+    with open(filename, 'r') as file:
+        string1 = file.readline().strip()
+        string2 = file.readline().strip()
+
+    return string1, string2
+
+''' read the whole file at once '''
+def read_multi_file(filename):
     with open(filename, 'r') as file:
         # read the entire file at once
-        file_content = file.read()
-        # remove the newline chars and whitspace        
-        stripped_content = file_content.strip()
-
-    return stripped_content
+        return file.read().strip()
 
 '''
     Overview: Driver code for testing the ed with two files
+    USAGE : python3 <EDTest.py> <file1> <file2 (optional)>
 '''
 if __name__ == "__main__":
-    # check the input (shouldn't be wrong with grader)
-    if len(sys.argv) != 3:
-        print("Incorrect file input")
-        sys.exit(1)
+    # check for one or two files given
+    if len(sys.argv) == 2:
+        string1, string2 = read_single_file(sys.argv[1])
+    elif len(sys.argv) == 3:
+        string1 = read_multi_file(sys.argv[1])
+        string2 = read_multi_file(sys.argv[2])
 
-    # read the contents into vars
-    file1_content = read_file(sys.argv[1])
-    file2_content = read_file(sys.argv[2])
+    ed = EditDistance.EditDistance()
+    distance = ed.findEditDistance(string1, string2)
 
-    ed = EditDistance()
-    distance = ed.findEditDistance(file1_content, file2_content)
-
-    print(f"Edit Distance: {distance}")
-    print("Path Chosen:")
-    ed.recoverAlignment(file1_content, file2_content)
+    print(f"String1: {string1} ---- String2: {string2}")
+    print(f"\nEDIT DISTANCE: {distance} with PATH of:\n")
+    ed.recoverAlignment(string1, string2)
     

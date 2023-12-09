@@ -5,21 +5,45 @@
 
 
 class TestChecker:
+    '''
+        Overview: initializes an instanc ef TestChecker
+    '''
     def __init__(self):
         self.string = None
         self.dictionary = set()
         self.istext = False
-    
+
+    '''
+        Overview: returns if substring from i to j is in dict
+        Parameters:
+            - i and j
+        Return:
+            - true if in dictionary
+    '''
     def dict(self, i, j):
         substring = self.string[i:j]
         return substring in self.dictionary
 
+    '''
+        Overview: sets the TestChecker instance dictionary 
+        Parameters:
+            - input list of words
+    '''
     def setDictionary(self, dictionary):
         self.dictionary = set(dictionary)
-
+    
+    '''
+        Overview: sets the TestChecker instance dictionary 
+        Parameters:
+            - string s
+    '''
     def setString(self, s):
         self.string = s
     
+    '''
+        Overview: determines if the text is made up of only 
+        substrings in the dictionary
+    '''
     def isText(self):
         n = len(self.string)
         arr = [False] * (n + 1)
@@ -34,61 +58,35 @@ class TestChecker:
         self.istext = arr[n]
         return self.istext
     
+    '''
+        Overview: recovers the words that make up the split and prints
+    '''
     def split(self):
-        pass
+        if not self.istext:
+            print("The string ", self.string, " is not a text")
+            return
+
+        n = len(self.string)
+        split_result = self.find_split(0, n)
+
+        # Print the split
+        print("String:", self.string, " splits into the words:", split_result)
+
+    '''
+    Overview: recursively identifies a valid split of the input string into dictionary words
+    '''
+    def find_split(self, start, end):
+        if start == end:
+            return []
+
+        for i in range(start + 1, end + 1):
+            if self.dict(start, i):
+                rest_of_split = self.find_split(i, end)
+                if rest_of_split is not None:
+                    return [self.string[start:i]] + rest_of_split
+
+        return None
 
 
-dictionary_words = {
-    'i': True,
-    'item': True,
-    'am': True,
-    'sam': True,
-    'ma': True,
-    'red': True,
-    'dare': True,
-    'rare': True,
-    're': True,
-    'in': True,
-    'into': True,
-    'to': True,
-    'a': True,
-    'the': True,
-    '2': True,
-    'main': True,
-    'and': True,
-    'an': True,
-}
-words_to_check = [
-    "samiam",
-    "iamsam",
-    "iamiamiam",
-    "maiamsam",
-    "iteminred",
-    "themainitemandtherarereddare",
-    "itemandtheraredare",
-    "maintothered",
-    "redare",
-    "reddare",
-    "rareanddare",
-    "redandrareinmain",
-    "themaindare",
-    "aandb",
-    "intotooandthe",
-    "themainsambutnotthelastone",
-    "stop",
-    "iamtired",
-    "redraredareinannitem",
-]
-
-check = TestChecker()
-check.setDictionary(dictionary_words)
-
-for word in words_to_check:
-    check.string = word
-    result = check.isText()
-    print(f"{word}: {result}")
-
-
-        
 
         
